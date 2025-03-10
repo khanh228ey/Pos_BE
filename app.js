@@ -4,8 +4,15 @@ const connectDB = require('./config/database.js');
 const routeWeb = require('./routes/web.js');
 const routeAdmin = require('./routes/admin.js');
 
-const app = express();
 const port = process.env.PORT;
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//Router
+app.use('/api/v1', routeAdmin);
 
 const startServer = (port) => {
     app.listen(port, () => {
@@ -13,7 +20,6 @@ const startServer = (port) => {
       connectDB();
     }).on('error', (err) => {
       if (err.code === 'EADDRINUSE') {
-        console.log(`Cổng ${port} đã được sử dụng. Đang thử cổng khác...`);
         startServer(port + 1); 
       }
     });
